@@ -117,7 +117,7 @@ WHERE od.productCode IN (
     FROM orderdetails od2
     JOIN orders o2 ON od2.orderNumber = o2.orderNumber
     GROUP BY od2.productCode
-    HAVING COUNT(o2.customerNumber) < 20
+    HAVING COUNT(DISTINCT o2.customerNumber) < 20
 )
 """, conn)
 
