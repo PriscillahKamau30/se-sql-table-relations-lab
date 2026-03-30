@@ -112,14 +112,15 @@ JOIN offices o ON e.officeCode = o.officeCode
 JOIN customers c ON e.employeeNumber = c.salesRepEmployeeNumber
 JOIN orders ord ON c.customerNumber = ord.customerNumber
 JOIN orderdetails od ON ord.orderNumber = od.orderNumber
-WHERE od.productCode IN (
+JOIN (
     SELECT od2.productCode
     FROM orderdetails od2
     JOIN orders o2 ON od2.orderNumber = o2.orderNumber
     GROUP BY od2.productCode
     HAVING COUNT(DISTINCT o2.customerNumber) < 20
-)
-ORDER BY e.employeeNumber
+) AS under_products
+ON od.productCode = under_products.productCode
+ORDER BY e.lastName, e.firstName
 """, conn)
 
 conn.close()
